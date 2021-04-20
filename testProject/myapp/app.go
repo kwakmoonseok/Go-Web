@@ -13,6 +13,7 @@ type User struct{
     Email string        `json:"email"`
     CreatedAt time.Time `json:"created_at"`
 }
+
 type fooHandler struct{}
 func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     user := new(User)
@@ -24,12 +25,14 @@ func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     }
     user.CreatedAt = time.Now()
 
-    data, err := json.Marshal(user)
+    data, _ := json.Marshal(user)
     w.Header().Add("content-type", "application/json")
-    w.WriteHeader(http.StatusOK)
+    w.WriteHeader(http.StatusCreated)
     fmt.Fprint(w, string(data))
+}
 
-
+func indexHandler(w http.ResponseWriter, r *http.Request){
+    fmt.Fprint(w, "Hello world")
 }
 
 func barHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,11 +42,9 @@ func barHandler(w http.ResponseWriter, r *http.Request) {
     }
     fmt.Fprintf(w, "Hello %s", name)
 }
-func NewHandler() http.Handler {
+func NewHttpHandler() http.Handler {
 	mux := http.NewServeMux()
-    mux.HandleFunc("/", func (w http.ResponseWriter, r *http.Request){
-        fmt.Fprint(w, "Hello world")
-    })
+    mux.HandleFunc("/", indexHandler)
     mux.HandleFunc("/bar", barHandler)
 
     mux.Handle("/foo", &fooHandler{})
