@@ -86,10 +86,10 @@ func main() {
 	fmt.Println(sentData)
 
 	receiver := &UnzipComponent{
-		com : &DecryptComponent{
+		com: &DecryptComponent{
 			key: "abcde",
 			com: &ReadComponent{}}}
 	
-	receiver.Operator(recvData)
+	receiver.Operator(sentData)
 	fmt.Println(recvData)
-}
+}	
